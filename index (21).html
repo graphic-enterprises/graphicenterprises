@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphic Enterprises - Blue Store</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-blue: #0077be;
+            --dark-blue: #001f3f;
+            --accent: #00aaff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #001f3f 0%, #0077be 100%);
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: rgba(0, 31, 63, 0.95);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        
+        nav {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00aaff;
+        }
+        
+        .admin-toggle {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid #00aaff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,31,63,0.8), rgba(0,119,190,0.8)), url('https://picsum.photos/id/1015/1920/1080') center/cover;
+        }
+        
+        .hero-content h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-button {
+            background: #00aaff;
+            color: white;
+            padding: 16px 50px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0,170,255,0.5);
+        }
+        
+        .shop-section {
+            padding: 100px 0;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        h2 {
+            text-align: center;
+            font-size: 3.2rem;
+            margin-bottom: 3rem;
+            color: #00aaff;
+        }
+        
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .slider {
+            display: flex;
+            gap: 2rem;
+            transition: transform 0.5s ease;
+        }
+        
+        .design-card {
+            min-width: 320px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .design-card:hover {
+            transform: scale(1.04);
+        }
+        
+        .design-card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .placeholder {
+            height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #88aaff;
+            font-size: 1.1rem;
+            text-align: center;
+            border: 3px dashed #00aaff;
+            margin: 15px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+        
+        .placeholder:hover {
+            background: rgba(0,170,255,0.15);
+            border-color: #00ffaa;
+        }
+        
+        .design-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            color: #00ffaa;
+            font-weight: bold;
+        }
+        
+        .add-btn {
+            background: #00aaff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            width: 100%;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .purchase-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,31,63,0.98);
+            padding: 1.2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            z-index: 2000;
+            border-top: 3px solid #00aaff;
+        }
+
+        /* Modals */
+        #admin-login, #checkout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-panel, .modal > div {
+            background: #001f3f;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid #00aaff;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: #00ff88;
+            color: #001f3f;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 6000;
+            font-weight: 600;
+        }
+
+        .cart-count {
+            position: fixed;
+            top: 25px;
+            right: 180px;
+            background: #ff3366;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 1100;
+        }
+        
+        .amount-input {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #00aaff;
+        }
+        
+        .amount-input input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            width: 160px;
+            outline: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: #00ff88;
+            color: #001f3f;
+            padding: 18px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.5);
+            display: none;
+            z-index: 3000;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .cart-count {
+            position: fixed;
+            top: 25px;
+            right: 30px;
+            background: #ff3366;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 1001;
+        }
+        
+        /* Admin Panel */
+        #admin-login {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-panel {
+            background: #001f3f;
+            padding: 3rem;
+            border-radius: 20px;
+            width: 400px;
+            text-align: center;
+            border: 2px solid #00aaff;
+        }
+        
+        .login-panel input {
+            width: 100%;
+            padding: 14px;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #00aaff;
+            background: #112233;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Graphic Enterprises 💙</div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button onclick="toggleAdmin()" class="admin-toggle">Admin Mode</button>
+                <button onclick="toggleCart()" style="background: rgba(255,255,255,0.2); border: 2px solid #00aaff; color: white; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 1.4rem; display: flex; align-items: center; gap: 6px;">
+                    🛒 <span id="header-cart-count" style="font-size: 1rem; background: #ff3366; color: white; border-radius: 50%; padding: 2px 7px; font-weight: bold;">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Home -->
+    <section class="hero">
+        <div class="hero-content" style="max-width:800px;">
+            <h1>Graphic Enterprises</h1>
+            <p style="font-size:1.6rem; margin:1.5rem 0;">Premium Graphic Designs by Gerald Okosun</p>
+            <a href="#shop" class="cta-button">Shop Designs →</a>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="shop-section">
+        <div class="container">
+            <h2>Available Designs</h2>
+            
+            <div class="slider-container">
+                <div class="slider" id="slider"></div>
+            </div>
+            
+            <div style="text-align:center; margin-top: 30px;">
+                <button onclick="prevSlide()" style="font-size:2.5rem; background:none; border:none; color:white; margin:0 30px; cursor:pointer;">←</button>
+                <button onclick="nextSlide()" style="font-size:2.5rem; background:none; border:none; color:white; margin:0 30px; cursor:pointer;">→</button>
+                <button onclick="addNewDesignSlot()" style="margin-left:40px; background:#00aaff; color:white; border:none; padding:12px 25px; border-radius:50px; font-size:1.1rem; cursor:pointer;">+ Add New Design Slot</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Bar -->
+    <div class="purchase-bar">
+        <div class="amount-input">
+            <span style="font-size:1.8rem; margin-right:8px;">₦</span>
+            <input type="number" id="amount-input" value="25000" min="5000">
+        </div>
+        <button onclick="addCurrentToCart()" class="add-btn" style="width:auto; padding:14px 40px;">Add to Cart</button>
+        <button onclick="showCheckout()" class="add-btn" style="background:#00ff88; color:#001f3f;">Confirm & Pay</button>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">✅ <span id="notif-text"></span></div>
+
+    <!-- Cart Count -->
+    <div id="cart-count" class="cart-count">0</div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login">
+        <div class="login-panel">
+            <h2>Admin Access</h2>
+            <p>Enter Password to continue</p>
+            <input type="password" id="admin-password" placeholder="Enter password" />
+            <button onclick="verifyAdmin()" style="background:#00aaff; color:white; padding:12px 40px; border:none; border-radius:50px; width:100%; margin-top:1rem; font-size:1.1rem; cursor:pointer;">Unlock Admin Mode</button>
+            <button onclick="closeAdminLogin()" style="background:transparent; border:2px solid #ff3366; color:white; padding:12px 30px; border-radius:50px; margin-top:10px; width:100%; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div style="background:#001f3f; padding:2.5rem; border-radius:20px; width:90%; max-width:480px;">
+            <h2>Complete Purchase</h2>
+            <p id="modal-total" style="font-size:1.6rem; color:#00ffaa; margin:1.5rem 0;"></p>
+            
+            <select id="card-type" style="width:100%; padding:12px; margin:10px 0; border-radius:8px; background:#112233; color:white;">
+                <option value="">Select Card Type</option>
+                <option value="Visa">Visa</option>
+                <option value="Mastercard">Mastercard</option>
+                <option value="Verve">Verve</option>
+                <option value="American Express">American Express</option>
+            </select>
+            
+            <input type="text" id="card-number" placeholder="Card Number" maxlength="19" style="width:100%; padding:12px; margin:8px 0; border-radius:8px; background:#112233; color:white;" />
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" style="flex:1; padding:12px; margin:8px 0; border-radius:8px; background:#112233; color:white;" />
+                <input type="text" id="cvv" placeholder="CVV" maxlength="4" style="flex:1; padding:12px; margin:8px 0; border-radius:8px; background:#112233; color:white;" />
+            </div>
+            
+            <button onclick="processPayment()" style="background:#00ff88; color:#001f3f; width:100%; padding:16px; margin-top:20px; border:none; border-radius:50px; font-weight:700; font-size:1.2rem;">Pay Securely</button>
+            <button onclick="closeCheckout()" style="background:transparent; border:2px solid #ff3366; color:white; width:100%; padding:14px; margin-top:10px; border-radius:50px;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Cart Panel -->
+    <div id="cart-panel" style="display: none; position: fixed; top: 80px; right: 20px; width: 380px; background: #001f3f; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,170,255,0.4); z-index: 3000; border: 2px solid #00aaff; overflow: hidden;">
+        <div style="padding: 20px; border-bottom: 1px solid #00aaff; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin:0;">🛒 Your Cart (<span id="panel-cart-count">0</span>)</h3>
+            <button onclick="toggleCart()" style="background:none; border:none; color:#ff3366; font-size:1.8rem; cursor:pointer;">✕</button>
+        </div>
+        <div id="cart-items" style="max-height: 420px; overflow-y: auto; padding: 15px;"></div>
+        <div style="padding: 20px; border-top: 1px solid #00aaff;">
+            <div style="display: flex; justify-content: space-between; font-size: 1.4rem; margin-bottom: 15px;">
+                <strong>Total:</strong>
+                <strong id="cart-total">₦0</strong>
+            </div>
+            <button onclick="showCheckout(); toggleCart();" style="width:100%; background:#00ff88; color:#001f3f; padding:16px; border:none; border-radius:50px; font-weight:700; font-size:1.1rem; margin-bottom:10px;">Proceed to Checkout</button>
+            <button onclick="clearCart(); toggleCart();" style="width:100%; background:transparent; border:2px solid #ff3366; color:white; padding:14px; border-radius:50px;">Clear Cart</button>
+        </div>
+    </div>
+
+    <script>
+        let isAdmin = false;
+        let designs = [
+            { id: 1, name: "Design 1", img: "", price: 35000 },
+            { id: 2, name: "Design 2", img: "", price: 28000 },
+            { id: 3, name: "Design 3", img: "", price: 42000 }
+        ];
+        let cart = [];
+        let currentIndex = 0;
+
+        const slider = document.getElementById('slider');
+
+        function renderSlider() {
+            slider.innerHTML = '';
+            designs.forEach((design, index) => {
+                const card = document.createElement('div');
+                card.className = 'design-card';
+                card.dataset.index = index;
+                
+                let imageHTML = '';
+                if (design.img && design.img !== '') {
+                    imageHTML = `<img src="${design.img}" alt="${design.name}" style="display:block;">`;
+                } else {
+                    imageHTML = `
+                        <div class="placeholder" onclick="uploadImage(${index}); event.stopImmediatePropagation()">
+                            <div style="font-size: 4rem; margin-bottom: 10px;">+</div>
+                            <div>CLICK • PASTE • DROP</div>
+                            <div style="font-size:0.9rem; opacity:0.8;">AN IMAGE</div>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    ${imageHTML}
+                    <div class="design-info">
+                        <h3>${design.name}</h3>
+                        <div class="price">₦${design.price.toLocaleString()}</div>
+                        ${isAdmin ? `<button onclick="editDesign(${index}); event.stopImmediatePropagation()" style="background:#ffaa00; margin-top:8px; padding:8px 16px;">Edit</button>` : ''}
+                        <button onclick="addToCart(${design.id}); event.stopImmediatePropagation()" class="add-btn">Add to Cart</button>
+                    </div>
+                `;
+                
+                // Add paste listener
+                card.addEventListener('paste', (e) => {
+                    if (!isAdmin) return;
+                    handlePaste(e, index);
+                });
+                
+                slider.appendChild(card);
+            });
+            updateSliderPosition();
+        }
+
+        function updateSliderPosition() {
+            slider.style.transform = `translateX(-${currentIndex * 340}px)`;
+        }
+
+        function nextSlide() { currentIndex = (currentIndex + 1) % designs.length; updateSliderPosition(); }
+        function prevSlide() { currentIndex = (currentIndex - 1 + designs.length) % designs.length; updateSliderPosition(); }
+
+        function addToCart(id) {
+            const design = designs.find(d => d.id === id);
+            if (design) {
+                cart.push({...design});
+                updateCartDisplays();
+                showNotification(`+1 ${design.name} added to cart`);
+            }
+        }
+
+        function addCurrentToCart() {
+            if (designs[currentIndex]) addToCart(designs[currentIndex].id);
+        }
+
+        function showNotification(text) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notif-text').innerHTML = text;
+            notif.style.display = 'flex';
+            setTimeout(() => notif.style.display = 'none', 2800);
+        }
+
+        function toggleAdmin() {
+            if (isAdmin) {
+                isAdmin = false;
+                renderSlider();
+                alert("Admin mode turned OFF. Editing disabled.");
+            } else {
+                document.getElementById('admin-login').style.display = 'flex';
+            }
+        }
+
+        function verifyAdmin() {
+            const password = document.getElementById('admin-password').value.trim();
+            if (password === "g") {
+                isAdmin = true;
+                document.getElementById('admin-login').style.display = 'none';
+                renderSlider();
+                alert("✅ Admin Mode Activated! You can now edit designs and prices.");
+            } else {
+                alert("❌ Incorrect password");
+            }
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login').style.display = 'none';
+        }
+
+        function editDesign(index) {
+            if (!isAdmin) return;
+            const design = designs[index];
+            const newName = prompt("New design name:", design.name);
+            if (newName) design.name = newName;
+            
+            const newPrice = prompt("New price (₦):", design.price);
+            if (newPrice) design.price = parseInt(newPrice);
+            
+            const newImg = prompt("New image URL:", design.img);
+            if (newImg) design.img = newImg;
+            
+            renderSlider();
+        }
+
+        function addNewDesignSlot() {
+            if (!isAdmin) {
+                alert("Only the owner can add new design slots.");
+                return;
+            }
+            const newDesign = {
+                id: Date.now(),
+                name: "New Design " + (designs.length + 1),
+                img: "https://picsum.photos/id/" + (100 + designs.length) + "/600/400",
+                price: 25000
+            };
+            designs.push(newDesign);
+            renderSlider();
+            currentIndex = designs.length - 1;
+            updateSliderPosition();
+        }
+
+        function showCheckout() {
+            if (cart.length === 0) {
+                showNotification("Cart is empty!");
+                return;
+            }
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('modal-total').innerHTML = `Total: ₦${total.toLocaleString()}<br><small>${cart.length} items</small>`;
+            document.getElementById('checkout-modal').style.display = 'flex';
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').style.display = 'none';
+        }
+
+        // Paystack Integration
+        const PAYSTACK_PUBLIC_KEY = "pk_test_5b0f728e12eb5eb7df5a7a93ea6ff23af9e6fa80";
+
+        function processPayment() {
+            closeCheckout();
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const txRef = "GE-" + Date.now();
+
+            if (total <= 0) {
+                alert("Invalid amount");
+                return;
+            }
+
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: "customer@graphicenterprises.com",
+                amount: total * 100, // Paystack uses kobo
+                currency: "NGN",
+                ref: txRef,
+                callback: function(response) {
+                    showSuccessReceipt(total, response.reference);
+                },
+                onClose: function() {
+                    // alert('Payment cancelled');
+                }
+            });
+
+            handler.openIframe();
+        }
+
+        function showSuccessReceipt(total, txRef) {
+            const receiptHTML = `
+                <div style="background:#001f3f; padding:30px; border-radius:20px; max-width:500px; margin:40px auto; border:3px solid #00ff88; text-align:center;">
+                    <h1 style="color:#00ff88;">✅ Payment Successful!</h1>
+                    <p style="font-size:1.4rem; margin:20px 0;">Thank you for your purchase</p>
+                    
+                    <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:12px; margin:20px 0;">
+                        <p><strong>Transaction ID:</strong> ${txRef}</p>
+                        <p><strong>Total Paid:</strong> ₦${total.toLocaleString()}</p>
+                        <p><strong>Payment Method:</strong> Paystack</p>
+                        <p><strong>Credited To:</strong> OPAY 9040075062</p>
+                    </div>
+                    
+                    <p style="margin:25px 0; color:#88aaff;">Your designs have been downloaded automatically.</p>
+                    <button onclick="this.parentElement.parentElement.style.display='none'; window.location.reload()" 
+                            style="background:#00ff88; color:#001f3f; padding:15px 40px; border:none; border-radius:50px; font-size:1.1rem; cursor:pointer;">
+                        Close Receipt
+                    </button>
+                </div>
+            `;
+
+            const receiptDiv = document.createElement('div');
+            receiptDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:6000; display:flex; align-items:center; justify-content:center;';
+            receiptDiv.innerHTML = receiptHTML;
+            document.body.appendChild(receiptDiv);
+
+            // Auto-download designs
+            cart.forEach(item => {
+                if (item.img) {
+                    const link = document.createElement('a');
+                    link.href = item.img;
+                    link.download = item.name.replace(/[^a-zA-Z0-9]/g, '_') + '.jpg';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+
+            cart = [];
+            updateCartDisplays();
+        }
+
+        // Cart Panel Functions
+        function toggleCart() {
+            const panel = document.getElementById('cart-panel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                renderCartPanel();
+                panel.style.display = 'block';
+            }
+        }
+
+        function renderCartPanel() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding:40px; color:#88aaff;">Your cart is empty</p>';
+                document.getElementById('panel-cart-count').textContent = '0';
+                document.getElementById('cart-total').textContent = '₦0';
+                return;
+            }
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.style = 'display:flex; gap:12px; margin-bottom:15px; background:rgba(255,255,255,0.08); padding:10px; border-radius:12px;';
+                div.innerHTML = `
+                    <img src="${item.img}" style="width:70px; height:70px; object-fit:cover; border-radius:8px;">
+                    <div style="flex:1;">
+                        <div style="font-weight:600;">${item.name}</div>
+                        <div style="color:#00ffaa;">₦${item.price.toLocaleString()}</div>
+                    </div>
+                    <button onclick="removeFromCart(${index}); event.stopImmediatePropagation()" style="background:#ff3366; color:white; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; align-self:center;">×</button>
+                `;
+                container.appendChild(div);
+            });
+            
+            document.getElementById('panel-cart-count').textContent = cart.length;
+            document.getElementById('cart-total').textContent = `₦${total.toLocaleString()}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCartPanel();
+            updateCartDisplays();
+        }
+
+        function clearCart() {
+            if (confirm("Clear entire cart?")) {
+                cart = [];
+                updateCartDisplays();
+            }
+        }
+
+        function updateCartDisplays() {
+            const count = cart.length;
+            const cartEl = document.getElementById('cart-count');
+            if (cartEl) cartEl.textContent = count;
+            
+            // Safe check for header cart count if it exists
+            const headerCount = document.getElementById('header-cart-count');
+            if (headerCount) headerCount.textContent = count;
+        }
+
+        // Image Paste Handler
+        function handlePaste(e, index) {
+            const items = e.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        designs[index].img = event.target.result;
+                        renderSlider();
+                        showNotification("✅ Image pasted successfully!");
+                    };
+                    reader.readAsDataURL(blob);
+                    break;
+                }
+            }
+        }
+
+        // Upload Image
+        function uploadImage(index) {
+            if (!isAdmin) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        designs[index].img = event.target.result;
+                        renderSlider();
+                        showNotification("✅ Image uploaded successfully!");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Initialize
+        renderSlider();
+        updateCartDisplays();
+
+        // Load Paystack Script
+        const paystackScript = document.createElement('script');
+        paystackScript.src = "https://js.paystack.co/v1/inline.js";
+        document.head.appendChild(paystackScript);
+        
+        // Keyboard support
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>
